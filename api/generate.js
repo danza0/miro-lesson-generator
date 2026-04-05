@@ -172,10 +172,10 @@ function hexToInt(hex) {
   return parseInt(hex.replace('#', ''), 16);
 }
 
-// Generate a large unique ID for Miro widgets
-let idBase = 3074457352748360000;
+// Generate unique IDs for Miro widgets using smaller safe integers
+let idCounter = 1000000;
 function nextWidgetId() {
-  return idBase++;
+  return idCounter++;
 }
 
 const COLOR_SCHEMES = {
