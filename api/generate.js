@@ -1,13 +1,11 @@
-import JSZip from 'jszip';
+const JSZip = require('jszip');
 
-export const config = { maxDuration: 60 };
-
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { topic, grammarFocus, level, studentAge, lessonType } = req.body;
+  const { topic, grammarFocus, level, studentAge, lessonType, colorScheme } = req.body;
 
   if (!topic) {
     return res.status(400).json({ error: 'Topic is required' });
@@ -15,57 +13,54 @@ export default async function handler(req, res) {
 
   const isKids = lessonType === 'kids';
 
-  const systemPrompt = `You are an expert English lesson planner for Ukrainian students. Return ONLY valid JSON, no markdown fences, no extra text.`;
+  const systemPrompt = `You are an expert English lesson planner for Ukrainian students. You specialize in creating grammar-focused, interactive lessons with exercises, quizzes, and practice activities. Return ONLY valid JSON, no markdown fences, no extra text.`;
 
   const userPrompt = `Create a complete English lesson plan for ${isKids ? 'kids (ages 9-12)' : 'adults (ages 25+)'}.
 
 Topic: ${topic}
-${grammarFocus ? `Grammar Focus: ${grammarFocus}` : ''}
+${grammarFocus ? `Grammar Focus: ${grammarFocus} — this is the PRIMARY focus of the lesson. Build all sections around practicing this grammar point.` : ''}
 Level: ${level || 'B1 Intermediate'}
 Student Age: ${studentAge || (isKids ? '10' : '25-30')}
 
+IMPORTANT: The lesson must be heavily grammar-focused with practical exercises. Every section should reinforce the grammar point.
+
 Return this exact JSON structure:
 {
-  "lessonTitle": "string",
+  "lessonTitle": "string — include the grammar point in the title",
   "warmUp": {
     "title": "string",
-    "activity": "string",
+    "activity": "string — a quick warm-up activity that introduces the grammar concept naturally",
     "content": ["item1", "item2", "item3", "item4"]
   },
   "vocabulary": {
     "title": "string",
     "words": [
-      { "word": "string", "translation": "string (Ukrainian translation)", "example": "string" },
-      { "word": "string", "translation": "string", "example": "string" },
-      { "word": "string", "translation": "string", "example": "string" },
-      { "word": "string", "translation": "string", "example": "string" },
-      { "word": "string", "translation": "string", "example": "string" },
-      { "word": "string", "translation": "string", "example": "string" }
+      { "word": "string", "translation": "string (Ukrainian translation)", "example": "string — example sentence using the target grammar" }
     ]
   },
   "grammar": {
-    "title": "string",
-    "rule": "string",
-    "examples": ["string", "string", "string", "string"]
+    "title": "string — name the grammar rule clearly",
+    "rule": "string — explain the grammar rule clearly with formula/pattern, e.g. 'Subject + was/were + verb-ing'",
+    "examples": ["4 clear example sentences showing the grammar rule, with the grammar structure highlighted using CAPS, e.g. 'She WAS WATCHING TV when I called.'"]
   },
   "practice": {
     "title": "string",
-    "type": "fill-in-the-gap | conversation | agree-disagree",
-    "instructions": "string",
-    "items": ["string", "string", "string", "string", "string", "string", "string", "string"]
+    "type": "fill-in-the-gap",
+    "instructions": "string — clear instructions for the exercise",
+    "items": ["8 fill-in-the-gap or transformation exercises targeting the grammar point, e.g. 'She ___ (go) to school yesterday. → went'"]
   },
   "speaking": {
     "title": "string",
-    "prompt": "string",
-    "questions": ["string", "string", "string", "string"]
+    "prompt": "string — a speaking task that requires using the target grammar",
+    "questions": ["4 discussion questions that force students to use the target grammar structure in their answers"]
   },
   "kahoot": {
-    "title": "And of course... your favourite Kahoot! \ud83c\udf89",
-    "suggestion": "string"
+    "title": "And of course... your favourite Kahoot! 🎉",
+    "suggestion": "string — suggest 4-5 quiz question ideas testing the grammar point"
   }
 }
 
-Make it engaging, age-appropriate, and focused on the topic. Include Ukrainian translations for vocabulary. For practice type, choose the most appropriate one for the topic.`;
+Provide exactly 6 vocabulary words. Make exercises progressive in difficulty. Include Ukrainian translations for vocabulary. Make it engaging and age-appropriate.`;
 
   try {
     const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
@@ -77,7 +72,7 @@ Make it engaging, age-appropriate, and focused on the topic. Include Ukrainian t
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20241022',
-        max_tokens: 2000,
+        max_tokens: 2500,
         messages: [
           { role: 'user', content: userPrompt }
         ],
@@ -87,6 +82,7 @@ Make it engaging, age-appropriate, and focused on the topic. Include Ukrainian t
 
     if (!anthropicRes.ok) {
       const err = await anthropicRes.text();
+      console.error('Claude API error:', err);
       return res.status(500).json({ error: 'Claude API error', details: err });
     }
 
@@ -98,8 +94,9 @@ Make it engaging, age-appropriate, and focused on the topic. Include Ukrainian t
 
     const lesson = JSON.parse(rawText);
 
-    // Build Miro board widgets
-    const widgets = buildWidgets(lesson, isKids);
+    // Determine color scheme
+    const scheme = colorScheme || (isKids ? 'kids' : 'adults');
+    const widgets = buildWidgets(lesson, scheme);
 
     const boardJson = {
       version: '2.7',
@@ -113,23 +110,91 @@ Make it engaging, age-appropriate, and focused on the topic. Include Ukrainian t
     const buffer = await zip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' });
 
     res.setHeader('Content-Type', 'application/octet-stream');
-    res.setHeader('Content-Disposition', `attachment; filename="${lesson.lessonTitle || 'lesson'}.rtb"`);
+    res.setHeader('Content-Disposition', `attachment; filename="${(lesson.lessonTitle || 'lesson').replace(/[^a-zA-Z0-9 ]/g, '')}.rtb"`);
     res.setHeader('X-Lesson-Title', encodeURIComponent(lesson.lessonTitle || 'Lesson'));
     res.send(buffer);
   } catch (err) {
     console.error('Error:', err);
     res.status(500).json({ error: 'Failed to generate lesson', details: err.message });
   }
-}
+};
 
-function buildWidgets(lesson, isKids) {
+module.exports.config = { maxDuration: 60 };
+
+const COLOR_SCHEMES = {
+  kids: {
+    frames: ['#ffe8d6', '#d6eaff', '#e8d6ff', '#d6ffe8', '#fff3cd', '#f0f0f0'],
+    vocabCard: '#dbeafe',
+    grammarRule: '#e8d6ff',
+    grammarExample: '#F5A0C0',
+    warmUpSticky: ['#FFE599', '#F5A623'],
+    practiceSticky: '#FFE599',
+    speakingShape: '#fff3cd',
+    speakingSticky: '#FFE599',
+    kahootShape: '#e8d6ff',
+  },
+  adults: {
+    frames: ['#e8f4e8', '#fff3cd', '#f8d7da', '#d1ecf1', '#e2d9f3', '#f0f0f0'],
+    vocabCard: '#e0f2fe',
+    grammarRule: '#f8d7da',
+    grammarExample: '#fecaca',
+    warmUpSticky: ['#d1fae5', '#a7f3d0'],
+    practiceSticky: '#dbeafe',
+    speakingShape: '#e2d9f3',
+    speakingSticky: '#ede9fe',
+    kahootShape: '#e2d9f3',
+  },
+  ocean: {
+    frames: ['#e0f7fa', '#b2ebf2', '#80deea', '#b2dfdb', '#e0f2f1', '#eceff1'],
+    vocabCard: '#b2ebf2',
+    grammarRule: '#80deea',
+    grammarExample: '#4dd0e1',
+    warmUpSticky: ['#b2ebf2', '#80deea'],
+    practiceSticky: '#b2dfdb',
+    speakingShape: '#e0f2f1',
+    speakingSticky: '#b2dfdb',
+    kahootShape: '#80deea',
+  },
+  sunset: {
+    frames: ['#fff3e0', '#ffe0b2', '#ffccbc', '#f8bbd0', '#e1bee7', '#f3e5f5'],
+    vocabCard: '#ffe0b2',
+    grammarRule: '#ffccbc',
+    grammarExample: '#ef9a9a',
+    warmUpSticky: ['#ffe0b2', '#ffcc80'],
+    practiceSticky: '#f8bbd0',
+    speakingShape: '#e1bee7',
+    speakingSticky: '#ce93d8',
+    kahootShape: '#e1bee7',
+  },
+  forest: {
+    frames: ['#e8f5e9', '#c8e6c9', '#a5d6a7', '#dcedc8', '#f1f8e9', '#f5f5f5'],
+    vocabCard: '#c8e6c9',
+    grammarRule: '#a5d6a7',
+    grammarExample: '#81c784',
+    warmUpSticky: ['#dcedc8', '#c5e1a5'],
+    practiceSticky: '#c8e6c9',
+    speakingShape: '#dcedc8',
+    speakingSticky: '#aed581',
+    kahootShape: '#a5d6a7',
+  },
+  monochrome: {
+    frames: ['#f5f5f5', '#eeeeee', '#e0e0e0', '#eeeeee', '#f5f5f5', '#fafafa'],
+    vocabCard: '#e0e0e0',
+    grammarRule: '#bdbdbd',
+    grammarExample: '#e0e0e0',
+    warmUpSticky: ['#eeeeee', '#e0e0e0'],
+    practiceSticky: '#eeeeee',
+    speakingShape: '#e0e0e0',
+    speakingSticky: '#eeeeee',
+    kahootShape: '#bdbdbd',
+  },
+};
+
+function buildWidgets(lesson, scheme) {
+  const colors = COLOR_SCHEMES[scheme] || COLOR_SCHEMES.kids;
   const widgets = [];
   let idCounter = 1;
   const nextId = () => String(idCounter++);
-
-  const sectionColors = isKids
-    ? ['#ffe8d6', '#d6eaff', '#e8d6ff', '#d6ffe8', '#fff3cd', '#f0f0f0']
-    : ['#e8f4e8', '#fff3cd', '#f8d7da', '#d1ecf1', '#e2d9f3', '#f0f0f0'];
 
   const sectionNames = ['Warm Up', 'Vocabulary', 'Grammar', 'Practice', 'Speaking', 'Kahoot'];
   const sectionXOffsets = [0, 950, 1900, 2850, 3800, 4750];
@@ -158,7 +223,7 @@ function buildWidgets(lesson, isKids) {
       width: 800,
       height: 1300,
       title: '',
-      style: { backgroundColor: sectionColors[i] },
+      style: { backgroundColor: colors.frames[i] },
     });
 
     widgets.push({
@@ -178,7 +243,6 @@ function buildWidgets(lesson, isKids) {
   // --- Warm Up (x=0) ---
   const warmUpX = 0;
   const warmUpItems = lesson.warmUp.content || [];
-  // Activity description
   widgets.push({
     id: nextId(),
     type: 'STICKER',
@@ -186,7 +250,7 @@ function buildWidgets(lesson, isKids) {
     y: -430,
     width: 500,
     text: lesson.warmUp.activity,
-    style: { stickerBackgroundColor: '#FFE599', fontSize: 16, textAlign: 'center' },
+    style: { stickerBackgroundColor: colors.warmUpSticky[0], fontSize: 16, textAlign: 'center' },
   });
   for (let i = 0; i < warmUpItems.length; i++) {
     const row = Math.floor(i / 2);
@@ -199,7 +263,7 @@ function buildWidgets(lesson, isKids) {
       width: 280,
       text: warmUpItems[i],
       style: {
-        stickerBackgroundColor: i % 2 === 0 ? '#FFE599' : '#F5A623',
+        stickerBackgroundColor: colors.warmUpSticky[i % 2],
         fontSize: 18,
         textAlign: 'center',
       },
@@ -209,7 +273,7 @@ function buildWidgets(lesson, isKids) {
   // --- Vocabulary (x=950) ---
   const vocabX = 950;
   const words = lesson.vocabulary.words || [];
-  for (let i = 0; i < words.length; i++) {
+  for (let i = 0; i < Math.min(words.length, 6); i++) {
     const row = Math.floor(i / 2);
     const col = i % 2;
     const w = words[i];
@@ -223,9 +287,9 @@ function buildWidgets(lesson, isKids) {
       text: `${w.word}\n${w.translation}\n\n"${w.example}"`,
       style: {
         shapeType: 'round_rectangle',
-        backgroundColor: '#dbeafe',
+        backgroundColor: colors.vocabCard,
         backgroundOpacity: 1,
-        borderColor: '#dbeafe',
+        borderColor: colors.vocabCard,
         borderWidth: 2,
         borderOpacity: 1,
         fontSize: 18,
@@ -237,7 +301,6 @@ function buildWidgets(lesson, isKids) {
 
   // --- Grammar (x=1900) ---
   const grammarX = 1900;
-  // Rule shape
   widgets.push({
     id: nextId(),
     type: 'SHAPE',
@@ -248,9 +311,9 @@ function buildWidgets(lesson, isKids) {
     text: lesson.grammar.rule,
     style: {
       shapeType: 'round_rectangle',
-      backgroundColor: '#e8d6ff',
+      backgroundColor: colors.grammarRule,
       backgroundOpacity: 1,
-      borderColor: '#e8d6ff',
+      borderColor: colors.grammarRule,
       borderWidth: 2,
       borderOpacity: 1,
       fontSize: 18,
@@ -258,7 +321,6 @@ function buildWidgets(lesson, isKids) {
       textAlign: 'center',
     },
   });
-  // Examples
   const grammarExamples = lesson.grammar.examples || [];
   for (let i = 0; i < grammarExamples.length; i++) {
     widgets.push({
@@ -268,21 +330,20 @@ function buildWidgets(lesson, isKids) {
       y: -140 + i * 190,
       width: 600,
       text: grammarExamples[i],
-      style: { stickerBackgroundColor: '#F5A0C0', fontSize: 18, textAlign: 'center' },
+      style: { stickerBackgroundColor: colors.grammarExample, fontSize: 18, textAlign: 'center' },
     });
   }
 
   // --- Practice (x=2850) ---
   const practiceX = 2850;
-  // Instructions
   widgets.push({
     id: nextId(),
     type: 'STICKER',
     x: practiceX,
     y: -480,
     width: 600,
-    text: `${lesson.practice.type.toUpperCase()}\n${lesson.practice.instructions}`,
-    style: { stickerBackgroundColor: '#FFE599', fontSize: 14, textAlign: 'center' },
+    text: `${(lesson.practice.type || 'EXERCISE').toUpperCase()}\n${lesson.practice.instructions}`,
+    style: { stickerBackgroundColor: colors.practiceSticky, fontSize: 14, textAlign: 'center' },
   });
   const practiceItems = lesson.practice.items || [];
   for (let i = 0; i < practiceItems.length; i++) {
@@ -295,13 +356,12 @@ function buildWidgets(lesson, isKids) {
       y: -340 + row * 200,
       width: 300,
       text: practiceItems[i],
-      style: { stickerBackgroundColor: '#FFE599', fontSize: 16, textAlign: 'center' },
+      style: { stickerBackgroundColor: colors.practiceSticky, fontSize: 16, textAlign: 'center' },
     });
   }
 
   // --- Speaking (x=3800) ---
   const speakingX = 3800;
-  // Prompt shape
   widgets.push({
     id: nextId(),
     type: 'SHAPE',
@@ -312,9 +372,9 @@ function buildWidgets(lesson, isKids) {
     text: lesson.speaking.prompt,
     style: {
       shapeType: 'round_rectangle',
-      backgroundColor: '#fff3cd',
+      backgroundColor: colors.speakingShape,
       backgroundOpacity: 1,
-      borderColor: '#fff3cd',
+      borderColor: colors.speakingShape,
       borderWidth: 2,
       borderOpacity: 1,
       fontSize: 18,
@@ -331,7 +391,7 @@ function buildWidgets(lesson, isKids) {
       y: -260 + i * 200,
       width: 600,
       text: speakingQuestions[i],
-      style: { stickerBackgroundColor: '#FFE599', fontSize: 18, textAlign: 'center' },
+      style: { stickerBackgroundColor: colors.speakingSticky, fontSize: 18, textAlign: 'center' },
     });
   }
 
@@ -347,9 +407,9 @@ function buildWidgets(lesson, isKids) {
     text: `${lesson.kahoot.title}\n\n${lesson.kahoot.suggestion}`,
     style: {
       shapeType: 'round_rectangle',
-      backgroundColor: '#e8d6ff',
+      backgroundColor: colors.kahootShape,
       backgroundOpacity: 1,
-      borderColor: '#e8d6ff',
+      borderColor: colors.kahootShape,
       borderWidth: 2,
       borderOpacity: 1,
       fontSize: 20,
@@ -357,7 +417,6 @@ function buildWidgets(lesson, isKids) {
       textAlign: 'center',
     },
   });
-  // Well done sticky
   widgets.push({
     id: nextId(),
     type: 'STICKER',
