@@ -3,7 +3,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { topic, grammarFocus, level, studentAge, lessonType, youtubeUrls } = req.body;
+  const { topic, prevTopic, grammarFocus, level, studentAge, lessonType, youtubeUrls, duration } = req.body;
 
   if (!topic) {
     return res.status(400).json({ error: 'Topic is required' });
@@ -16,9 +16,16 @@ module.exports = async function handler(req, res) {
   const userPrompt = `Create a complete English lesson plan for ${isKids ? 'kids (ages 9-12)' : 'adults (ages 25+)'}.
 
 Topic: ${topic}
+${prevTopic ? `Previous Lesson Topic: ${prevTopic} — Use this for the WARM UP section. The warm-up should review/revisit the previous topic as a bridge into today's lesson. Students already know this material, so use it for quick review activities.` : ''}
 ${grammarFocus ? `Grammar Focus: ${grammarFocus} — this is the PRIMARY focus of the lesson. Build all sections around practicing this grammar point.` : ''}
 Level: ${level || 'B1 Intermediate'}
 Student Age: ${studentAge || (isKids ? '10' : '25-30')}
+
+Lesson Duration: ${duration || 30} minutes. Adjust the amount of content accordingly:
+- 10-15 min: 4 vocabulary words, 4 practice items, 3 quiz questions, shorter warm-up
+- 20-30 min: 6 vocabulary words, 8 practice items, 5 quiz questions (standard)
+- 35-45 min: 8 vocabulary words, 10 practice items, 6 quiz questions, more speaking questions
+- 50-60 min: 10 vocabulary words, 12 practice items, 8 quiz questions, extra examples
 
 IMPORTANT: The lesson must be heavily grammar-focused with practical exercises. Every section should reinforce the grammar point.
 
@@ -67,9 +74,7 @@ Return this exact JSON structure:
   }
 }
 
-For vocabulary: provide exactly 6 words with partOfSpeech.
-For practice items: provide exactly 8 fill-in-the-gap exercises with sentence and answer fields.
-For kahoot questions: provide exactly 5 multiple choice questions with 4 options each and correct index (0-3).
+Adjust the number of items based on the lesson duration specified above.
 Make exercises progressive in difficulty. Include Ukrainian translations. Make it engaging and age-appropriate.`;
 
   try {
