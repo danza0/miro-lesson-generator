@@ -23,10 +23,10 @@ Level: ${level || 'B1 Intermediate'}
 Student Age: ${studentAge || (isKids ? '10' : '25-30')}
 
 Lesson Duration: ${duration || 30} minutes. Adjust the amount of content accordingly:
-- 10-15 min: 4 vocabulary words, 4 practice items, 3 quiz questions, shorter warm-up
-- 20-30 min: 6 vocabulary words, 8 practice items, 5 quiz questions (standard)
-- 35-45 min: 8 vocabulary words, 10 practice items, 6 quiz questions, more speaking questions
-- 50-60 min: 10 vocabulary words, 12 practice items, 8 quiz questions, extra examples
+- 10-15 min: 4 practice items, 3 quiz questions, shorter warm-up
+- 20-30 min: 8 practice items, 5 quiz questions (standard)
+- 35-45 min: 10 practice items, 6 quiz questions, more speaking questions
+- 50-60 min: 12 practice items, 8 quiz questions, extra examples
 
 IMPORTANT: The lesson must be heavily grammar-focused with practical exercises. Every section should reinforce the grammar point.
 
@@ -37,12 +37,6 @@ Return this exact JSON structure:
     "title": "Warm Up",
     "activity": "string — a quick warm-up activity description",
     "content": ["item1", "item2", "item3", "item4"]
-  },
-  "vocabulary": {
-    "title": "Vocabulary",
-    "words": [
-      { "word": "string", "translation": "string (Ukrainian translation)", "example": "string — example sentence using the target grammar", "partOfSpeech": "noun/verb/adjective/etc" }
-    ]
   },
   "grammar": {
     "title": "Grammar",

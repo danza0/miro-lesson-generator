@@ -540,10 +540,9 @@
       const app = document.getElementById('app');
       const sections = [
         { id: 'warmup', label: 'Warm Up', icon: '🔥' },
-        { id: 'vocab', label: 'Vocabulary', icon: '📚' },
       ];
       if (L.reviewVocabulary && L.reviewVocabulary.words && L.reviewVocabulary.words.length > 0) {
-        sections.push({ id: 'review-vocab', label: 'Review', icon: '🔄' });
+        sections.push({ id: 'review-vocab', label: 'Vocabulary Review', icon: '🔄' });
       }
       sections.push(
         { id: 'grammar', label: 'Grammar', icon: '📐' },
@@ -582,26 +581,6 @@
               <div class="warmup-items">
                 ${(L.warmUp.content || []).map(c => `<div class="warmup-item">${c}</div>`).join('')}
               </div>
-            </div>
-          </div>
-
-          <!-- Vocabulary -->
-          <div class="section" id="vocab">
-            <div class="section-header">
-              <div class="section-icon" style="background:var(--vocab-bg);color:var(--vocab-accent);">📚</div>
-              <h2>${L.vocabulary.title}</h2>
-            </div>
-            <p style="color:var(--muted);margin-bottom:16px;font-size:14px;">Hover over cards to reveal translations</p>
-            <div class="vocab-grid">
-              ${(L.vocabulary.words || []).map(w => `
-                <div class="vocab-card hidden" onclick="this.classList.toggle('hidden')">
-                  <div class="vocab-word">${w.word}</div>
-                  <div class="vocab-pos">${w.partOfSpeech || ''}</div>
-                  <div class="vocab-translation">${w.translation}</div>
-                  <div class="vocab-example">"${w.example}"</div>
-                  <div class="reveal-hint">tap to reveal</div>
-                </div>
-              `).join('')}
             </div>
           </div>
 
