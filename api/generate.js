@@ -3,7 +3,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { topic, prevTopic, grammarFocus, level, studentAge, lessonType, youtubeUrls, duration } = req.body;
+  const { topic, prevTopic, grammarFocus, level, studentAge, lessonType, youtubeUrls, duration, reviewVocab } = req.body;
 
   if (!topic) {
     return res.status(400).json({ error: 'Topic is required' });
@@ -18,6 +18,7 @@ module.exports = async function handler(req, res) {
 Topic: ${topic}
 ${prevTopic ? `Previous Lesson Topic: ${prevTopic} — Use this for the WARM UP section. The warm-up should review/revisit the previous topic as a bridge into today's lesson. Students already know this material, so use it for quick review activities.` : ''}
 ${grammarFocus ? `Grammar Focus: ${grammarFocus} — this is the PRIMARY focus of the lesson. Build all sections around practicing this grammar point.` : ''}
+${reviewVocab ? `Review Vocabulary: ${reviewVocab} — These are words from previous lessons that need to be reviewed. Include a "reviewVocabulary" section in the JSON output with these words. For each word provide: word, translation (Ukrainian), and a new example sentence using the target grammar. Weave these words into the warm-up and practice exercises where possible.` : ''}
 Level: ${level || 'B1 Intermediate'}
 Student Age: ${studentAge || (isKids ? '10' : '25-30')}
 
@@ -66,6 +67,12 @@ Return this exact JSON structure:
     "prompt": "string — a speaking task that requires using the target grammar",
     "questions": ["4 discussion questions that force students to use the target grammar structure"]
   },
+  "reviewVocabulary": {
+    "title": "Vocabulary Review",
+    "words": [
+      { "word": "string", "translation": "string (Ukrainian)", "example": "string — new example sentence using target grammar" }
+    ]
+  },
   "kahoot": {
     "title": "Quiz Time!",
     "questions": [
@@ -73,6 +80,8 @@ Return this exact JSON structure:
     ]
   }
 }
+
+If no review vocabulary was provided, omit the "reviewVocabulary" field entirely.
 
 Adjust the number of items based on the lesson duration specified above.
 Make exercises progressive in difficulty. Include Ukrainian translations. Make it engaging and age-appropriate.`;

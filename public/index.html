@@ -263,6 +263,10 @@
     </div>
 
     <div class="form-group">
+      <label for="reviewVocab">Review Vocabulary <span class="label-hint">(optional — words to revisit from previous lessons)</span></label>
+      <textarea id="reviewVocab" placeholder="apple, banana, run, happy...&#10;Or one word per line"></textarea>
+    </div>
+    <div class="form-group">
       <label for="youtube">YouTube Videos <span class="label-hint">(optional — paste URLs, one per line)</span></label>
       <textarea id="youtube" placeholder="https://youtube.com/watch?v=...&#10;https://youtu.be/..."></textarea>
     </div>
@@ -397,6 +401,7 @@
             studentAge: document.getElementById('age').value.trim(),
             lessonType,
             duration: parseInt(document.getElementById('duration').value),
+            reviewVocab: document.getElementById('reviewVocab').value.trim(),
             youtubeUrls: document.getElementById('youtube').value.trim(),
           }),
         });

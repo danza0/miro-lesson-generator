@@ -541,11 +541,16 @@
       const sections = [
         { id: 'warmup', label: 'Warm Up', icon: '🔥' },
         { id: 'vocab', label: 'Vocabulary', icon: '📚' },
+      ];
+      if (L.reviewVocabulary && L.reviewVocabulary.words && L.reviewVocabulary.words.length > 0) {
+        sections.push({ id: 'review-vocab', label: 'Review', icon: '🔄' });
+      }
+      sections.push(
         { id: 'grammar', label: 'Grammar', icon: '📐' },
         { id: 'practice', label: 'Practice', icon: '✏️' },
         { id: 'speaking', label: 'Speaking', icon: '💬' },
         { id: 'quiz', label: 'Quiz', icon: '🎯' },
-      ];
+      );
       if (L.videos && L.videos.length > 0) {
         sections.push({ id: 'videos', label: 'Videos', icon: '🎬' });
       }
@@ -599,6 +604,27 @@
               `).join('')}
             </div>
           </div>
+
+          <!-- Review Vocabulary -->
+          ${L.reviewVocabulary && L.reviewVocabulary.words && L.reviewVocabulary.words.length > 0 ? `
+          <div class="section" id="review-vocab">
+            <div class="section-header">
+              <div class="section-icon" style="background:var(--vocab-bg);color:var(--vocab-accent);">🔄</div>
+              <h2>${L.reviewVocabulary.title || 'Vocabulary Review'}</h2>
+            </div>
+            <p style="color:var(--muted);margin-bottom:16px;font-size:14px;">Words from previous lessons — hover to reveal</p>
+            <div class="vocab-grid">
+              ${L.reviewVocabulary.words.map(w => `
+                <div class="vocab-card hidden" onclick="this.classList.toggle('hidden')">
+                  <div class="vocab-word">${w.word}</div>
+                  <div class="vocab-translation">${w.translation}</div>
+                  <div class="vocab-example">"${w.example}"</div>
+                  <div class="reveal-hint">tap to reveal</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          ` : ''}
 
           <!-- Grammar -->
           <div class="section" id="grammar">
