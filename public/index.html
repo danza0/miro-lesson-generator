@@ -33,7 +33,7 @@
       color: #1a1a2e;
     }
     h1 .gradient-text {
-      background: linear-gradient(135deg, var(--accent, #f97316), var(--accent2, #a855f7));
+      background: linear-gradient(135deg, var(--accent, #60a5fa), var(--accent2, #38bdf8));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -48,7 +48,7 @@
       cursor: pointer; transition: all 0.3s; background: transparent; color: #6b7280;
     }
     .toggle button.active {
-      background: linear-gradient(135deg, var(--accent, #f97316), var(--accent2, #a855f7));
+      background: linear-gradient(135deg, var(--accent, #60a5fa), var(--accent2, #38bdf8));
       color: #fff;
     }
     .form-group { margin-bottom: 16px; }
@@ -60,7 +60,7 @@
       transition: border-color 0.2s; outline: none; background: #fff;
     }
     textarea { resize: vertical; min-height: 60px; }
-    input:focus, select:focus, textarea:focus { border-color: var(--accent, #a855f7); }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent, #38bdf8); }
 
     /* Color picker */
     .color-row {
@@ -123,7 +123,7 @@
       font-family: 'Fraunces', serif;
       font-size: 24px;
       font-weight: 700;
-      color: var(--accent, #f97316);
+      color: var(--accent, #60a5fa);
     }
     .duration-label { font-size: 13px; color: #9ca3af; }
     input[type="range"] {
@@ -141,13 +141,13 @@
       width: 24px;
       height: 24px;
       border-radius: 50%;
-      background: var(--accent, #f97316);
+      background: var(--accent, #60a5fa);
       cursor: pointer;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
     input[type="range"]::-moz-range-thumb {
       width: 24px; height: 24px; border-radius: 50%;
-      background: var(--accent, #f97316); cursor: pointer; border: none;
+      background: var(--accent, #60a5fa); cursor: pointer; border: none;
     }
     .duration-ticks {
       display: flex;
@@ -161,7 +161,7 @@
       width: 100%; padding: 14px; border: none; border-radius: 14px;
       font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600;
       color: #fff; cursor: pointer; margin-top: 8px;
-      background: linear-gradient(135deg, var(--accent, #f97316), var(--accent2, #a855f7));
+      background: linear-gradient(135deg, var(--accent, #60a5fa), var(--accent2, #38bdf8));
       transition: all 0.3s;
     }
     .btn:hover { opacity: 0.9; transform: translateY(-1px); }
@@ -177,7 +177,7 @@
       background: #f3f4f6; transition: all 0.3s; flex-shrink: 0;
     }
     .step.active .step-icon {
-      background: linear-gradient(135deg, var(--accent, #f97316), var(--accent2, #a855f7));
+      background: linear-gradient(135deg, var(--accent, #60a5fa), var(--accent2, #38bdf8));
       color: #fff; animation: pulse 1.2s infinite;
     }
     .step.done .step-icon { background: #10b981; color: #fff; animation: none; }
@@ -244,13 +244,13 @@
       <label>Theme Color</label>
       <div class="color-row">
         <div class="color-input-wrap">
-          <input type="color" id="color-picker" value="#f97316" onchange="setColor(this.value)">
+          <input type="color" id="color-picker" value="#60a5fa" onchange="setColor(this.value)">
         </div>
-        <input type="text" class="color-hex" id="color-hex" value="#f97316" placeholder="#f97316" oninput="setColorFromHex(this.value)">
+        <input type="text" class="color-hex" id="color-hex" value="#60a5fa" placeholder="#60a5fa" oninput="setColorFromHex(this.value)">
       </div>
       <div class="color-presets" id="color-presets">
-        <div class="color-preset selected" style="background:#f97316" onclick="setColor('#f97316')"></div>
-        <div class="color-preset" style="background:#a855f7" onclick="setColor('#a855f7')"></div>
+        <div class="color-preset selected" style="background:#60a5fa" onclick="setColor('#60a5fa')"></div>
+        <div class="color-preset" style="background:#38bdf8" onclick="setColor('#38bdf8')"></div>
         <div class="color-preset" style="background:#ec4899" onclick="setColor('#ec4899')"></div>
         <div class="color-preset" style="background:#ef4444" onclick="setColor('#ef4444')"></div>
         <div class="color-preset" style="background:#0ea5e9" onclick="setColor('#0ea5e9')"></div>
@@ -278,7 +278,7 @@
   </div>
   <script>
     let lessonType = 'kids';
-    let themeColor = '#f97316';
+    let themeColor = '#60a5fa';
 
     function setMode(mode) {
       lessonType = mode;
@@ -425,7 +425,7 @@
     }
 
     // Init color
-    setColor('#f97316');
+    setColor('#60a5fa');
   </script>
 </body>
 </html>
