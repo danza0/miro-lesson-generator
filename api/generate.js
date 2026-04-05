@@ -71,7 +71,7 @@ Provide exactly 6 vocabulary words. Make exercises progressive in difficulty. In
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20241022',
+        model: 'claude-3-haiku-20240307',
         max_tokens: 2500,
         messages: [
           { role: 'user', content: userPrompt }
