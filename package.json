@@ -2,7 +2,5 @@
   "name": "lesson-generator",
   "version": "1.0.0",
   "private": true,
-  "dependencies": {
-    "jszip": "^3.10.1"
-  }
+  "dependencies": {}
 }

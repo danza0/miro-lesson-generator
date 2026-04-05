@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       font-family: 'DM Sans', sans-serif;
       background: #faf8f5;
@@ -17,7 +16,6 @@
       justify-content: center;
       padding: 40px 20px;
     }
-
     .card {
       background: #fff;
       border-radius: 24px;
@@ -26,7 +24,6 @@
       width: 100%;
       box-shadow: 0 4px 24px rgba(0,0,0,0.06);
     }
-
     h1 {
       font-family: 'Fraunces', serif;
       font-size: 28px;
@@ -35,300 +32,90 @@
       margin-bottom: 32px;
       color: #1a1a2e;
     }
-
     h1 .gradient-text {
       background: linear-gradient(135deg, #f97316, #a855f7);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      transition: background 0.4s;
     }
-
     body.adults h1 .gradient-text {
       background: linear-gradient(135deg, #0ea5e9, #10b981);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-
-    /* Toggle */
-    .toggle-wrap {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 28px;
-    }
-
+    .toggle-wrap { display: flex; justify-content: center; margin-bottom: 28px; }
     .toggle {
-      display: flex;
-      background: #f3f4f6;
-      border-radius: 100px;
-      padding: 4px;
-      gap: 4px;
+      display: flex; background: #f3f4f6; border-radius: 100px; padding: 4px; gap: 4px;
     }
-
     .toggle button {
-      border: none;
-      padding: 10px 24px;
-      border-radius: 100px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      background: transparent;
-      color: #6b7280;
+      border: none; padding: 10px 24px; border-radius: 100px;
+      font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all 0.3s; background: transparent; color: #6b7280;
     }
-
-    .toggle button.active-kids {
-      background: linear-gradient(135deg, #f97316, #a855f7);
-      color: #fff;
+    .toggle button.active-kids { background: linear-gradient(135deg, #f97316, #a855f7); color: #fff; }
+    .toggle button.active-adults { background: linear-gradient(135deg, #0ea5e9, #10b981); color: #fff; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+    .label-hint { font-weight: 400; color: #9ca3af; }
+    input, select, textarea {
+      width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 12px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px;
+      transition: border-color 0.2s; outline: none; background: #fff;
     }
-
-    .toggle button.active-adults {
-      background: linear-gradient(135deg, #0ea5e9, #10b981);
-      color: #fff;
-    }
-
-    /* Form */
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 6px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #e5e7eb;
-      border-radius: 12px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      transition: border-color 0.2s;
-      outline: none;
-      background: #fff;
-    }
-
-    input:focus, select:focus {
-      border-color: #a855f7;
-    }
-
-    body.adults input:focus, body.adults select:focus {
-      border-color: #0ea5e9;
-    }
-
-    /* Color scheme picker */
-    .color-schemes {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-
-    .color-swatch {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      border: 3px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-    }
-
-    .color-swatch:hover { transform: scale(1.1); }
-
-    .color-swatch.selected {
-      border-color: #1a1a2e;
-      box-shadow: 0 0 0 2px #fff, 0 0 0 4px #1a1a2e;
-    }
-
-    .color-swatch .swatch-name {
-      display: none;
-      position: absolute;
-      bottom: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 10px;
-      white-space: nowrap;
-      color: #6b7280;
-    }
-
-    .color-swatch:hover .swatch-name,
-    .color-swatch.selected .swatch-name {
-      display: block;
-    }
-
+    textarea { resize: vertical; min-height: 60px; }
+    input:focus, select:focus, textarea:focus { border-color: #a855f7; }
+    body.adults input:focus, body.adults select:focus, body.adults textarea:focus { border-color: #0ea5e9; }
     .btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 14px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 16px;
-      font-weight: 600;
-      color: #fff;
-      cursor: pointer;
-      margin-top: 8px;
-      background: linear-gradient(135deg, #f97316, #a855f7);
-      transition: all 0.3s;
-      position: relative;
+      width: 100%; padding: 14px; border: none; border-radius: 14px;
+      font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600;
+      color: #fff; cursor: pointer; margin-top: 8px;
+      background: linear-gradient(135deg, #f97316, #a855f7); transition: all 0.3s;
     }
-
-    body.adults .btn {
-      background: linear-gradient(135deg, #0ea5e9, #10b981);
-    }
-
+    body.adults .btn { background: linear-gradient(135deg, #0ea5e9, #10b981); }
     .btn:hover { opacity: 0.9; transform: translateY(-1px); }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-    /* Progress */
     .progress { display: none; margin-top: 24px; }
     .progress.visible { display: block; }
-
-    .step {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 0;
-      color: #9ca3af;
-      font-size: 14px;
-      transition: color 0.3s;
-    }
-
+    .step { display: flex; align-items: center; gap: 12px; padding: 10px 0; color: #9ca3af; font-size: 14px; transition: color 0.3s; }
     .step.active { color: #1a1a2e; }
     .step.done { color: #10b981; }
-
     .step-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      background: #f3f4f6;
-      transition: all 0.3s;
-      flex-shrink: 0;
+      width: 28px; height: 28px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; font-size: 14px;
+      background: #f3f4f6; transition: all 0.3s; flex-shrink: 0;
     }
-
     .step.active .step-icon {
-      background: linear-gradient(135deg, #f97316, #a855f7);
-      color: #fff;
-      animation: pulse 1.2s infinite;
+      background: linear-gradient(135deg, #f97316, #a855f7); color: #fff; animation: pulse 1.2s infinite;
     }
-
-    body.adults .step.active .step-icon {
-      background: linear-gradient(135deg, #0ea5e9, #10b981);
-    }
-
-    .step.done .step-icon {
-      background: #10b981;
-      color: #fff;
-      animation: none;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.15); }
-    }
-
-    /* Success */
-    .success-box {
-      display: none;
-      margin-top: 24px;
-      padding: 24px;
-      background: #f0fdf4;
-      border-radius: 16px;
-      border: 1px solid #bbf7d0;
-      text-align: center;
-    }
-
-    .success-box.visible { display: block; }
-
-    .success-box h3 {
-      font-family: 'Fraunces', serif;
-      color: #166534;
-      margin-bottom: 12px;
-      font-size: 18px;
-    }
-
-    .download-btn {
-      display: inline-block;
-      padding: 12px 28px;
-      background: #10b981;
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      margin: 12px 0;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
-    .download-btn:hover { background: #059669; }
-
-    .instructions {
-      text-align: left;
-      margin-top: 16px;
-      font-size: 13px;
-      color: #374151;
-      line-height: 1.7;
-    }
-
-    .instructions b { color: #166534; }
-
-    /* Error */
+    body.adults .step.active .step-icon { background: linear-gradient(135deg, #0ea5e9, #10b981); }
+    .step.done .step-icon { background: #10b981; color: #fff; animation: none; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
     .error-box {
-      display: none;
-      margin-top: 24px;
-      padding: 16px;
-      background: #fef2f2;
-      border-radius: 12px;
-      border: 1px solid #fecaca;
-      color: #991b1b;
-      font-size: 14px;
-      text-align: center;
+      display: none; margin-top: 24px; padding: 16px; background: #fef2f2;
+      border-radius: 12px; border: 1px solid #fecaca; color: #991b1b; font-size: 14px; text-align: center;
     }
-
     .error-box.visible { display: block; }
-
-    footer {
-      text-align: center;
-      margin-top: 32px;
-      font-size: 13px;
-      color: #9ca3af;
-    }
+    footer { text-align: center; margin-top: 32px; font-size: 13px; color: #9ca3af; }
   </style>
 </head>
 <body>
   <div class="card">
     <h1>Generate a <span class="gradient-text">perfect lesson</span></h1>
-
     <div class="toggle-wrap">
       <div class="toggle">
         <button id="btn-kids" class="active-kids" onclick="setMode('kids')">Kids (9-12)</button>
         <button id="btn-adults" onclick="setMode('adults')">Adults (25+)</button>
       </div>
     </div>
-
     <div class="form-group">
       <label for="topic">Topic *</label>
       <input type="text" id="topic" placeholder="e.g. Travel, Food, Daily Routine...">
     </div>
-
     <div class="form-group">
-      <label for="grammar">Grammar Focus (optional)</label>
+      <label for="grammar">Grammar Focus <span class="label-hint">(optional)</span></label>
       <input type="text" id="grammar" placeholder="e.g. was/were, Present Perfect, Conditionals...">
     </div>
-
     <div class="form-group">
       <label for="level">Level</label>
       <select id="level">
@@ -339,90 +126,32 @@
         <option value="C1 Advanced">C1 Advanced</option>
       </select>
     </div>
-
     <div class="form-group">
       <label for="age">Student Age</label>
       <input type="text" id="age" placeholder="e.g. 10 or 25-30">
     </div>
-
-    <div class="form-group" style="margin-bottom: 24px;">
-      <label>Board Color Scheme</label>
-      <div class="color-schemes" id="color-schemes">
-        <div class="color-swatch selected" data-scheme="auto" style="background: linear-gradient(135deg, #ffe8d6, #d6eaff, #e8d6ff);" onclick="setScheme(this, 'auto')">
-          <span class="swatch-name">Auto</span>
-        </div>
-        <div class="color-swatch" data-scheme="ocean" style="background: linear-gradient(135deg, #e0f7fa, #80deea);" onclick="setScheme(this, 'ocean')">
-          <span class="swatch-name">Ocean</span>
-        </div>
-        <div class="color-swatch" data-scheme="sunset" style="background: linear-gradient(135deg, #fff3e0, #f8bbd0);" onclick="setScheme(this, 'sunset')">
-          <span class="swatch-name">Sunset</span>
-        </div>
-        <div class="color-swatch" data-scheme="forest" style="background: linear-gradient(135deg, #e8f5e9, #a5d6a7);" onclick="setScheme(this, 'forest')">
-          <span class="swatch-name">Forest</span>
-        </div>
-        <div class="color-swatch" data-scheme="monochrome" style="background: linear-gradient(135deg, #f5f5f5, #bdbdbd);" onclick="setScheme(this, 'monochrome')">
-          <span class="swatch-name">Mono</span>
-        </div>
-      </div>
+    <div class="form-group">
+      <label for="youtube">YouTube Videos <span class="label-hint">(optional — paste URLs, one per line)</span></label>
+      <textarea id="youtube" placeholder="https://youtube.com/watch?v=...&#10;https://youtu.be/..."></textarea>
     </div>
-
     <button class="btn" id="generate-btn" onclick="generate()">Generate Lesson</button>
-
     <div class="progress" id="progress">
-      <div class="step" id="step-1">
-        <div class="step-icon">1</div>
-        <span>Preparing lesson plan...</span>
-      </div>
-      <div class="step" id="step-2">
-        <div class="step-icon">2</div>
-        <span>Generating vocabulary & grammar exercises...</span>
-      </div>
-      <div class="step" id="step-3">
-        <div class="step-icon">3</div>
-        <span>Creating practice activities & quizzes...</span>
-      </div>
-      <div class="step" id="step-4">
-        <div class="step-icon">4</div>
-        <span>Building Miro board file...</span>
-      </div>
+      <div class="step" id="step-1"><div class="step-icon">1</div><span>Analyzing topic & grammar...</span></div>
+      <div class="step" id="step-2"><div class="step-icon">2</div><span>Creating vocabulary & exercises...</span></div>
+      <div class="step" id="step-3"><div class="step-icon">3</div><span>Building interactive lesson...</span></div>
+      <div class="step" id="step-4"><div class="step-icon">4</div><span>Finalizing...</span></div>
     </div>
-
-    <div class="success-box" id="success">
-      <h3 id="success-title">Lesson ready!</h3>
-      <a class="download-btn" id="download-btn" href="#">Download Miro Board (.rtb)</a>
-      <div class="instructions">
-        <b>How to import into Miro:</b><br>
-        1. Open Miro &rarr; click <b>+ New Board</b> or go to an existing board<br>
-        2. Click the <b>...</b> menu &rarr; <b>Import</b> &rarr; Upload .rtb file<br>
-        3. Select the downloaded file and your lesson appears instantly!
-      </div>
-    </div>
-
     <div class="error-box" id="error"></div>
-
     <footer>Made with &hearts; for Ukrainian learners</footer>
   </div>
-
   <script>
     let lessonType = 'kids';
-    let colorScheme = 'auto';
-    let blobUrl = null;
-
     function setMode(mode) {
       lessonType = mode;
-      const btnKids = document.getElementById('btn-kids');
-      const btnAdults = document.getElementById('btn-adults');
-      btnKids.className = mode === 'kids' ? 'active-kids' : '';
-      btnAdults.className = mode === 'adults' ? 'active-adults' : '';
+      document.getElementById('btn-kids').className = mode === 'kids' ? 'active-kids' : '';
+      document.getElementById('btn-adults').className = mode === 'adults' ? 'active-adults' : '';
       document.body.className = mode === 'adults' ? 'adults' : '';
     }
-
-    function setScheme(el, scheme) {
-      colorScheme = scheme;
-      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-      el.classList.add('selected');
-    }
-
     function activateStep(n) {
       for (let i = 1; i <= 4; i++) {
         const el = document.getElementById('step-' + i);
@@ -430,40 +159,25 @@
         if (i < n) el.querySelector('.step-icon').textContent = '\u2713';
       }
     }
-
     async function generate() {
       const topic = document.getElementById('topic').value.trim();
-      if (!topic) {
-        document.getElementById('topic').focus();
-        return;
-      }
-
+      if (!topic) { document.getElementById('topic').focus(); return; }
       const btn = document.getElementById('generate-btn');
       const progress = document.getElementById('progress');
-      const success = document.getElementById('success');
       const error = document.getElementById('error');
-
       btn.disabled = true;
       btn.textContent = 'Generating...';
       progress.className = 'progress visible';
-      success.className = 'success-box';
       error.className = 'error-box';
-
-      // Reset steps
       for (let i = 1; i <= 4; i++) {
         const el = document.getElementById('step-' + i);
         el.className = 'step';
         el.querySelector('.step-icon').textContent = i;
       }
-
       activateStep(1);
-      const t1 = setTimeout(() => activateStep(2), 4000);
+      const t1 = setTimeout(() => activateStep(2), 3000);
       const t2 = setTimeout(() => activateStep(3), 6000);
-      const t3 = setTimeout(() => activateStep(4), 8000);
-
-      // Resolve color scheme
-      const resolvedScheme = colorScheme === 'auto' ? lessonType : colorScheme;
-
+      const t3 = setTimeout(() => activateStep(4), 9000);
       try {
         const res = await fetch('/api/generate', {
           method: 'POST',
@@ -474,51 +188,25 @@
             level: document.getElementById('level').value,
             studentAge: document.getElementById('age').value.trim(),
             lessonType,
-            colorScheme: resolvedScheme,
+            youtubeUrls: document.getElementById('youtube').value.trim(),
           }),
         });
-
-        clearTimeout(t1);
-        clearTimeout(t2);
-        clearTimeout(t3);
-
+        clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
         if (!res.ok) {
           const errData = await res.json();
           throw new Error(errData.error || 'Generation failed');
         }
-
-        // Mark all steps done
         for (let i = 1; i <= 4; i++) {
           const el = document.getElementById('step-' + i);
           el.className = 'step done';
           el.querySelector('.step-icon').textContent = '\u2713';
         }
-
-        const blob = await res.blob();
-        if (blobUrl) URL.revokeObjectURL(blobUrl);
-        blobUrl = URL.createObjectURL(blob);
-
-        const lessonTitle = decodeURIComponent(
-          res.headers.get('X-Lesson-Title') || 'Lesson'
-        );
-
-        document.getElementById('success-title').textContent = lessonTitle;
-
-        const downloadBtn = document.getElementById('download-btn');
-        downloadBtn.href = blobUrl;
-        downloadBtn.download = lessonTitle + '.rtb';
-
-        // Auto-download
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = lessonTitle + '.rtb';
-        a.click();
-
-        success.className = 'success-box visible';
+        const lesson = await res.json();
+        // Store lesson data and navigate to lesson page
+        sessionStorage.setItem('lesson', JSON.stringify(lesson));
+        window.location.href = '/lesson.html';
       } catch (err) {
-        clearTimeout(t1);
-        clearTimeout(t2);
-        clearTimeout(t3);
+        clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
         error.textContent = err.message;
         error.className = 'error-box visible';
       } finally {

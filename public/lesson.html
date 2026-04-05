@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #f97316;
+      --primary2: #a855f7;
+      --bg: #faf8f5;
+      --card: #fff;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --warmup-bg: #fff7ed;
+      --warmup-accent: #f97316;
+      --vocab-bg: #eff6ff;
+      --vocab-accent: #3b82f6;
+      --grammar-bg: #faf5ff;
+      --grammar-accent: #a855f7;
+      --practice-bg: #ecfdf5;
+      --practice-accent: #10b981;
+      --speaking-bg: #fefce8;
+      --speaking-accent: #eab308;
+      --quiz-bg: #fdf2f8;
+      --quiz-accent: #ec4899;
+    }
+    body.adults {
+      --primary: #0ea5e9;
+      --primary2: #10b981;
+      --warmup-bg: #ecfdf5;
+      --warmup-accent: #10b981;
+      --vocab-bg: #f0f9ff;
+      --vocab-accent: #0ea5e9;
+      --grammar-bg: #fef2f2;
+      --grammar-accent: #ef4444;
+      --practice-bg: #eff6ff;
+      --practice-accent: #3b82f6;
+      --speaking-bg: #faf5ff;
+      --speaking-accent: #8b5cf6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .lesson-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      color: #fff;
+      padding: 60px 24px 48px;
+      text-align: center;
+      position: relative;
+    }
+    .lesson-header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 900;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    .lesson-meta {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0.9;
+      font-size: 14px;
+    }
+    .lesson-meta span {
+      background: rgba(255,255,255,0.2);
+      padding: 4px 14px;
+      border-radius: 100px;
+    }
+    .header-actions {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 8px;
+    }
+    .header-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .header-btn:hover { background: rgba(255,255,255,0.35); }
+
+    /* Nav */
+    .section-nav {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .section-nav-inner {
+      display: flex;
+      gap: 0;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .nav-item {
+      padding: 14px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .nav-item:hover { color: var(--text); }
+    .nav-item.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    /* Sections */
+    .lesson-content { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+    .section {
+      margin-top: 48px;
+      scroll-margin-top: 60px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .section-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    /* Warm Up */
+    .warmup-card {
+      background: var(--warmup-bg);
+      border-radius: 20px;
+      padding: 28px;
+      border-left: 5px solid var(--warmup-accent);
+    }
+    .warmup-card p { font-size: 16px; margin-bottom: 16px; color: var(--text); }
+    .warmup-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .warmup-item {
+      background: #fff;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: transform 0.2s;
+    }
+    .warmup-item:hover { transform: translateY(-2px); }
+
+    /* Vocabulary */
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .vocab-card {
+      background: var(--vocab-bg);
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      min-height: 180px;
+    }
+    .vocab-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+    .vocab-word {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--vocab-accent);
+      margin-bottom: 4px;
+    }
+    .vocab-pos {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .vocab-translation {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .vocab-example {
+      font-size: 14px;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .vocab-card .reveal-hint {
+      position: absolute;
+      bottom: 12px;
+      right: 16px;
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.6;
+    }
+    .vocab-card.hidden .vocab-translation,
+    .vocab-card.hidden .vocab-example { filter: blur(8px); user-select: none; }
+    .vocab-card.hidden:hover .vocab-translation,
+    .vocab-card.hidden:hover .vocab-example { filter: none; }
+
+    /* Grammar */
+    .grammar-rule-box {
+      background: var(--grammar-bg);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 20px;
+      border: 2px solid var(--grammar-accent);
+    }
+    .grammar-rule-name {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--grammar-accent);
+      margin-bottom: 8px;
+    }
+    .grammar-formula {
+      background: var(--grammar-accent);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      margin: 16px 0;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .grammar-rule-text { font-size: 16px; line-height: 1.7; }
+    .grammar-examples { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .grammar-example-group h4 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+    .grammar-ex {
+      background: #fff;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 15px;
+      border-left: 4px solid var(--grammar-accent);
+      margin-bottom: 8px;
+    }
+    .grammar-ex .highlight { font-weight: 700; color: var(--grammar-accent); }
+
+    /* Practice */
+    .practice-instructions {
+      background: var(--practice-bg);
+      padding: 20px 24px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      font-size: 15px;
+      border-left: 5px solid var(--practice-accent);
+    }
+    .practice-items { display: flex; flex-direction: column; gap: 12px; }
+    .practice-item {
+      background: #fff;
+      padding: 20px 24px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      flex-wrap: wrap;
+    }
+    .practice-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--practice-accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px; flex-shrink: 0;
+    }
+    .practice-sentence { flex: 1; font-size: 16px; min-width: 200px; }
+    .practice-input {
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      width: 140px;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .practice-input:focus { border-color: var(--practice-accent); }
+    .practice-input.correct { border-color: #10b981; background: #ecfdf5; }
+    .practice-input.wrong { border-color: #ef4444; background: #fef2f2; }
+    .practice-check {
+      background: var(--practice-accent);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .practice-answer {
+      font-size: 13px;
+      color: #10b981;
+      font-weight: 600;
+      display: none;
+    }
+    .practice-answer.visible { display: block; }
+    .practice-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .check-all-btn {
+      background: var(--practice-accent);
+      color: #fff;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .show-answers-btn {
+      background: transparent;
+      color: var(--practice-accent);
+      border: 2px solid var(--practice-accent);
+      padding: 12px 28px;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .score-display {
+      display: none;
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .score-display.visible { display: block; }
+    .score-display.good { background: #ecfdf5; color: #10b981; }
+    .score-display.ok { background: #fefce8; color: #eab308; }
+    .score-display.bad { background: #fef2f2; color: #ef4444; }
+
+    /* Speaking */
+    .speaking-prompt {
+      background: var(--speaking-bg);
+      padding: 24px;
+      border-radius: 16px;
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      border-left: 5px solid var(--speaking-accent);
+    }
+    .speaking-questions { display: flex; flex-direction: column; gap: 12px; }
+    .speaking-q {
+      background: #fff;
+      padding: 18px 24px;
+      border-radius: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .speaking-q-num {
+      background: var(--speaking-accent);
+      color: #fff;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0;
+    }
+    .speaking-q-text { font-size: 16px; }
+
+    /* Quiz */
+    .quiz-container { }
+    .quiz-question {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .quiz-q-header {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .quiz-q-num {
+      background: var(--quiz-accent);
+      color: #fff;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px; flex-shrink: 0;
+    }
+    .quiz-q-text { font-size: 17px; font-weight: 600; }
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .quiz-option {
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 2px solid #e5e7eb;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.2s;
+      text-align: center;
+      font-weight: 500;
+    }
+    .quiz-option:hover { border-color: var(--quiz-accent); background: var(--quiz-bg); }
+    .quiz-option.selected { border-color: var(--quiz-accent); background: var(--quiz-bg); }
+    .quiz-option.correct { border-color: #10b981; background: #ecfdf5; color: #10b981; font-weight: 700; }
+    .quiz-option.wrong { border-color: #ef4444; background: #fef2f2; color: #ef4444; }
+    .quiz-option.disabled { pointer-events: none; opacity: 0.6; }
+    .quiz-result {
+      display: none;
+      text-align: center;
+      padding: 32px;
+      background: #fff;
+      border-radius: 16px;
+      margin-top: 16px;
+    }
+    .quiz-result.visible { display: block; }
+    .quiz-result h3 { font-family: 'Fraunces', serif; font-size: 28px; margin-bottom: 8px; }
+    .quiz-result p { font-size: 16px; color: var(--muted); }
+
+    /* Videos */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 16px;
+    }
+    .video-embed {
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      background: #000;
+    }
+    .video-embed iframe { width: 100%; height: 100%; border: none; }
+
+    /* Footer */
+    .lesson-footer {
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .quiz-options { grid-template-columns: 1fr; }
+      .vocab-grid { grid-template-columns: 1fr; }
+      .video-grid { grid-template-columns: 1fr; }
+      .header-actions { position: static; justify-content: center; margin-top: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    const lesson = JSON.parse(sessionStorage.getItem('lesson') || 'null');
+    if (!lesson) {
+      window.location.href = '/';
+    } else {
+      if (lesson.lessonType === 'adults') document.body.classList.add('adults');
+      document.title = lesson.lessonTitle;
+      render(lesson);
+    }
+
+    function render(L) {
+      const app = document.getElementById('app');
+      const sections = [
+        { id: 'warmup', label: 'Warm Up', icon: '🔥' },
+        { id: 'vocab', label: 'Vocabulary', icon: '📚' },
+        { id: 'grammar', label: 'Grammar', icon: '📐' },
+        { id: 'practice', label: 'Practice', icon: '✏️' },
+        { id: 'speaking', label: 'Speaking', icon: '💬' },
+        { id: 'quiz', label: 'Quiz', icon: '🎯' },
+      ];
+      if (L.videos && L.videos.length > 0) {
+        sections.push({ id: 'videos', label: 'Videos', icon: '🎬' });
+      }
+
+      app.innerHTML = `
+        <div class="lesson-header">
+          <div class="header-actions">
+            <a href="/" class="header-btn">+ New Lesson</a>
+            <button class="header-btn" onclick="window.print()">Print</button>
+          </div>
+          <h1>${L.lessonTitle}</h1>
+          <div class="lesson-meta">
+            <span>${L.level || 'B1'}</span>
+            <span>${L.lessonType === 'kids' ? 'Kids' : 'Adults'}</span>
+            ${L.studentAge ? `<span>Age: ${L.studentAge}</span>` : ''}
+          </div>
+        </div>
+
+        <nav class="section-nav">
+          <div class="section-nav-inner">
+            ${sections.map(s => `<a href="#${s.id}" class="nav-item">${s.icon} ${s.label}</a>`).join('')}
+          </div>
+        </nav>
+
+        <div class="lesson-content">
+          <!-- Warm Up -->
+          <div class="section" id="warmup">
+            <div class="section-header">
+              <div class="section-icon" style="background:var(--warmup-bg);color:var(--warmup-accent);">🔥</div>
+              <h2>${L.warmUp.title}</h2>
+            </div>
+            <div class="warmup-card">
+              <p>${L.warmUp.activity}</p>
+              <div class="warmup-items">
+                ${(L.warmUp.content || []).map(c => `<div class="warmup-item">${c}</div>`).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Vocabulary -->
+          <div class="section" id="vocab">
+            <div class="section-header">
+              <div class="section-icon" style="background:var(--vocab-bg);color:var(--vocab-accent);">📚</div>
+              <h2>${L.vocabulary.title}</h2>
+            </div>
+            <p style="color:var(--muted);margin-bottom:16px;font-size:14px;">Hover over cards to reveal translations</p>
+            <div class="vocab-grid">
+              ${(L.vocabulary.words || []).map(w => `
+                <div class="vocab-card hidden" onclick="this.classList.toggle('hidden')">
+                  <div class="vocab-word">${w.word}</div>
+                  <div class="vocab-pos">${w.partOfSpeech || ''}</div>
+                  <div class="vocab-translation">${w.translation}</div>
+                  <div class="vocab-example">"${w.example}"</div>
+                  <div class="reveal-hint">tap to reveal</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Grammar -->
+          <div class="section" id="grammar">
+            <div class="section-header">
+              <div class="section-icon" style="background:var(--grammar-bg);color:var(--grammar-accent);">📐</div>
+              <h2>${L.grammar.title}</h2>
+            </div>
+            <div class="grammar-rule-box">
+              <div class="grammar-rule-name">${L.grammar.ruleName || ''}</div>
+              <div class="grammar-formula">${L.grammar.formula || ''}</div>
+              <div class="grammar-rule-text">${L.grammar.rule}</div>
+            </div>
+            <div class="grammar-examples">
+              ${L.grammar.positiveExamples ? `
+                <div class="grammar-example-group">
+                  <h4>✅ Positive</h4>
+                  ${L.grammar.positiveExamples.map(e => `<div class="grammar-ex">${highlightGrammar(e)}</div>`).join('')}
+                </div>
+              ` : ''}
+              ${L.grammar.negativeExamples ? `
+                <div class="grammar-example-group">
+                  <h4>❌ Negative</h4>
+                  ${L.grammar.negativeExamples.map(e => `<div class="grammar-ex">${highlightGrammar(e)}</div>`).join('')}
+                </div>
+              ` : ''}
+              ${L.grammar.questionExamples ? `
+                <div class="grammar-example-group">
+                  <h4>❓ Questions</h4>
+                  ${L.grammar.questionExamples.map(e => `<div class="grammar-ex">${highlightGrammar(e)}</div>`).join('')}
+                </div>
+              ` : ''}
+              ${L.grammar.examples ? `
+                <div class="grammar-example-group">
+                  <h4>Examples</h4>
+                  ${L.grammar.examples.map(e => `<div class="grammar-ex">${highlightGrammar(e)}</div>`).join('')}
+                </div>
+              ` : ''}
+            </div>
+          </div>
+
+          <!-- Practice -->
+          <div class="section" id="practice">
+            <div class="section-header">
+              <div class="section-icon" style="background:var(--practice-bg);color:var(--practice-accent);">✏️</div>
+              <h2>${L.practice.title}</h2>
+            </div>
+            <div class="practice-instructions">${L.practice.instructions}</div>
+            <div class="practice-items" id="practice-items">
+              ${buildPracticeItems(L.practice.items)}
+            </div>
+            <div class="practice-actions">
+              <button class="check-all-btn" onclick="checkAllAnswers()">Check Answers</button>
+              <button class="show-answers-btn" onclick="showAllAnswers()">Show Answers</button>
+            </div>
+            <div class="score-display" id="score-display"></div>
+          </div>
+
+          <!-- Speaking -->
+          <div class="section" id="speaking">
+            <div class="section-header">
+              <div class="section-icon" style="background:var(--speaking-bg);color:var(--speaking-accent);">💬</div>
+              <h2>${L.speaking.title}</h2>
+            </div>
+            <div class="speaking-prompt">${L.speaking.prompt}</div>
+            <div class="speaking-questions">
+              ${(L.speaking.questions || []).map((q, i) => `
+                <div class="speaking-q">
+                  <div class="speaking-q-num">${i + 1}</div>
+                  <div class="speaking-q-text">${q}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Quiz -->
+          <div class="section" id="quiz">
+            <div class="section-header">
+              <div class="section-icon" style="background:var(--quiz-bg);color:var(--quiz-accent);">🎯</div>
+              <h2>${L.kahoot.title}</h2>
+            </div>
+            <div class="quiz-container" id="quiz-container">
+              ${buildQuiz(L.kahoot.questions)}
+            </div>
+            <div class="quiz-result" id="quiz-result">
+              <h3 id="quiz-score-text"></h3>
+              <p id="quiz-score-sub"></p>
+            </div>
+          </div>
+
+          <!-- Videos -->
+          ${L.videos && L.videos.length > 0 ? `
+            <div class="section" id="videos">
+              <div class="section-header">
+                <div class="section-icon" style="background:#f0f9ff;color:#0ea5e9;">🎬</div>
+                <h2>Videos</h2>
+              </div>
+              <div class="video-grid">
+                ${L.videos.map(id => `
+                  <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/${id}" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="lesson-footer">
+          Made with ♥ for Ukrainian learners
+        </div>
+      `;
+
+      // Sticky nav highlighting
+      const navItems = document.querySelectorAll('.nav-item');
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            navItems.forEach(n => n.classList.remove('active'));
+            const active = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+            if (active) active.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-100px 0px -70% 0px' });
+      document.querySelectorAll('.section').forEach(s => observer.observe(s));
+    }
+
+    function highlightGrammar(text) {
+      return text.replace(/\b([A-Z]{2,}(?:\s+[A-Z]{2,})*)\b/g, '<span class="highlight">$1</span>');
+    }
+
+    function buildPracticeItems(items) {
+      if (!items || !items.length) return '';
+      return items.map((item, i) => {
+        const sentence = typeof item === 'string' ? item : item.sentence;
+        const answer = typeof item === 'string' ? '' : (item.answer || '');
+        return `
+          <div class="practice-item">
+            <div class="practice-num">${i + 1}</div>
+            <div class="practice-sentence">${sentence}</div>
+            <input class="practice-input" data-answer="${answer}" placeholder="answer..." onkeypress="if(event.key==='Enter')checkSingle(this)">
+            <button class="practice-check" onclick="checkSingle(this.previousElementSibling)">Check</button>
+            <div class="practice-answer" data-ans="${answer}">→ ${answer}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function checkSingle(input) {
+      const answer = input.dataset.answer.toLowerCase().trim();
+      const value = input.value.toLowerCase().trim();
+      const answerEl = input.parentElement.querySelector('.practice-answer');
+      if (value === answer) {
+        input.className = 'practice-input correct';
+      } else {
+        input.className = 'practice-input wrong';
+        answerEl.classList.add('visible');
+      }
+    }
+
+    function checkAllAnswers() {
+      const inputs = document.querySelectorAll('.practice-input');
+      let correct = 0;
+      let total = inputs.length;
+      inputs.forEach(input => {
+        const answer = input.dataset.answer.toLowerCase().trim();
+        const value = input.value.toLowerCase().trim();
+        const answerEl = input.parentElement.querySelector('.practice-answer');
+        if (value === answer) {
+          input.className = 'practice-input correct';
+          correct++;
+        } else {
+          input.className = 'practice-input wrong';
+          answerEl.classList.add('visible');
+        }
+      });
+      const scoreEl = document.getElementById('score-display');
+      const pct = Math.round((correct / total) * 100);
+      scoreEl.textContent = `${correct}/${total} correct (${pct}%)`;
+      scoreEl.className = `score-display visible ${pct >= 80 ? 'good' : pct >= 50 ? 'ok' : 'bad'}`;
+    }
+
+    function showAllAnswers() {
+      document.querySelectorAll('.practice-answer').forEach(el => el.classList.add('visible'));
+      document.querySelectorAll('.practice-input').forEach(input => {
+        input.value = input.dataset.answer;
+        input.className = 'practice-input correct';
+      });
+    }
+
+    function buildQuiz(questions) {
+      if (!questions || !questions.length) return '<p>No quiz questions available.</p>';
+      return questions.map((q, qi) => `
+        <div class="quiz-question" data-correct="${q.correct}">
+          <div class="quiz-q-header">
+            <div class="quiz-q-num">${qi + 1}</div>
+            <div class="quiz-q-text">${q.question}</div>
+          </div>
+          <div class="quiz-options">
+            ${q.options.map((opt, oi) => `
+              <div class="quiz-option" data-qi="${qi}" data-oi="${oi}" onclick="selectQuizOption(this)">${opt}</div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    let quizAnswered = 0;
+    let quizCorrect = 0;
+    let quizTotal = 0;
+
+    function selectQuizOption(el) {
+      const qi = parseInt(el.dataset.qi);
+      const oi = parseInt(el.dataset.oi);
+      const question = el.closest('.quiz-question');
+      const correct = parseInt(question.dataset.correct);
+      const options = question.querySelectorAll('.quiz-option');
+
+      // Prevent re-answering
+      if (question.dataset.answered) return;
+      question.dataset.answered = 'true';
+
+      if (!quizTotal) {
+        quizTotal = document.querySelectorAll('.quiz-question').length;
+      }
+
+      options.forEach((opt, i) => {
+        opt.classList.add('disabled');
+        if (i === correct) opt.classList.add('correct');
+      });
+
+      if (oi !== correct) {
+        el.classList.add('wrong');
+      } else {
+        quizCorrect++;
+      }
+      quizAnswered++;
+
+      if (quizAnswered === quizTotal) {
+        const resultEl = document.getElementById('quiz-result');
+        const scoreText = document.getElementById('quiz-score-text');
+        const scoreSub = document.getElementById('quiz-score-sub');
+        const pct = Math.round((quizCorrect / quizTotal) * 100);
+        scoreText.textContent = `${quizCorrect}/${quizTotal} — ${pct}%`;
+        scoreSub.textContent = pct >= 80 ? 'Great job! 🎉' : pct >= 50 ? 'Good effort! Keep practicing! 💪' : 'Keep studying, you\'ll get there! 📚';
+        resultEl.classList.add('visible');
+      }
+    }
+  </script>
+</body>
+</html>
